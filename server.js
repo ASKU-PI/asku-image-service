@@ -1,37 +1,91 @@
 const express = require('express');
+const eurekaClient = require('./eureka');
+const uploader = require('./uploader');
+const mongo = require('./mongo')
+
+const Magazine = require('./models/magazine');
+const Profile = require('./models/profile');
+const e = require('express');
+
 const app = express();
 const port = 8892;
 
-const Eureka = require('eureka-js-client').Eureka;
+eurekaClient.start()
 
-const client = new Eureka({
-  instance: {
-    instanceId: 'asku-image-service-8892',
-    app: 'asku-image-service',
-    hostName: 'asku-image-service',
-    ipAddr: 'asku-image-service',
-    statusPageUrl: 'http://asku-image-service:8892',
-    status: `UP`,
-    port: {
-        $: 8892,
-        "@enabled": true,
-    },
-    vipAddress: 'jq.test.something.com',
-    dataCenterInfo: {
-        "@class": 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
-        name: 'MyOwn',
-    },
-  },
-  eureka: {
-    host: 'discovery',
-    port: 8761,
-    servicePath: '/eureka/apps/'
-  },
+app.use('/uploads', express.static('uploads'));
+
+app.post('/profile', uploader.single('picture'), function (req, res, next) {
+  const filePath = req.file.path
+  const userId = req.query.id
+
+  Profile.exists({ id: userId }, function (err, doc) {
+    if(err) {
+      res.status(400).send("Error saving to the database");
+    } else {
+      if(doc){
+        Profile.updateOne(
+          { id: userId },
+          { photo: { url: filePath } },
+          function (error, success) {
+          if(error) {
+            res.status(400).send("Error saving to the database");
+          } else {
+            res.send("File uploaded successfully");
+          }
+        });
+      } else {
+        Profile.create({ id: userId, photo: { url: filePath } }, function (error, success) {
+          if(error) {
+            res.status(400).send("Error saving to the database");
+          } else {
+            res.send("File uploaded successfully");
+          }
+        });
+      }
+    }
+  });
 });
 
-client.start()
+app.post('/magazine', uploader.array('picture', 15), function (req, res, next) {
+  const magazineId = req.query.id;
+  const photos = req.files.map((file) => { return { url: file.path } });
+
+  Magazine.exists({id: magazineId}, function (err, doc) {
+    if(err) {
+      res.status(400).send("Error saving to the database");
+    } else {
+      if(doc){
+        Magazine.updateOne(
+          { id: magazineId },
+          { $push: { photos: photos } },
+          function (error, success) {
+            if(error) {
+              res.status(400).send("Error saving to the database");
+            } else {
+              res.send("File uploaded successfully");
+            }
+          }
+        );
+      } else {
+        Magazine.create({ id: magazineId, photos: photos }, function (error, success) {
+          if(error) {
+            res.status(400).send("Error saving to the database");
+          } else {
+            res.send("File uploaded successfully");
+          }
+        });
+      }
+    }
+  });
+})
+
+// app.get('/profile', function(req, res) {
+//   const userId = req.params.id;
+
+//   Profile.find
+// });
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+    console.log(`ASKU Image Service listening at http://localhost:${port}`)
   })
 

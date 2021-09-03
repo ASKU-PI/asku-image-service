@@ -19,7 +19,7 @@
   "dependencies": {
     "eureka-js-client": "^4.5.0",
     "express": "^4.17.1",
-    "knex": "^0.95.10",
-    "mysql": "^2.18.1"
+    "mongoose": "^6.0.4",
+    "multer": "^1.4.3"
   }
 }
