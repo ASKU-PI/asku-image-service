@@ -23,9 +23,10 @@ app.post('/profile', uploader.single('picture'), function (req, res, next) {
       res.status(400).send("Error saving to the database");
     } else {
       if(doc){
-        Profile.updateOne(
+        Profile.findOneAndUpdate(
           { id: userId },
           { photo: { url: filePath } },
+          {new: true},
           function (error, success) {
           if(error) {
             res.status(400).send("Error saving to the database");
@@ -55,14 +56,15 @@ app.post('/magazine', uploader.array('picture', 15), function (req, res, next) {
       res.status(400).send("Error saving to the database");
     } else {
       if(doc){
-        Magazine.updateOne(
+        Magazine.findOneAndUpdate(
           { id: magazineId },
           { $push: { photos: photos } },
+          {new: true},
           function (error, success) {
             if(error) {
               res.status(400).send("Error saving to the database");
             } else {
-              res.send("File uploaded successfully");
+              res.send(success);
             }
           }
         );
@@ -71,7 +73,7 @@ app.post('/magazine', uploader.array('picture', 15), function (req, res, next) {
           if(error) {
             res.status(400).send("Error saving to the database");
           } else {
-            res.send("File uploaded successfully");
+            res.send(success);
           }
         });
       }
@@ -79,11 +81,29 @@ app.post('/magazine', uploader.array('picture', 15), function (req, res, next) {
   });
 })
 
-// app.get('/profile', function(req, res) {
-//   const userId = req.params.id;
+app.get('/profile', function(req, res) {
+  const userId = req.query.id;
 
-//   Profile.find
-// });
+  Profile.findOne({ id: userId }, function (err, profile) {
+    if(err) {
+      res.status(400).send("Error getting profile");
+    } else {
+      res.send(profile);
+    }
+  })
+});
+
+app.get('/magazine', function(req, res) {
+  const magazineId = req.query.id;
+
+  Magazine.findOne({ id: magazineId }, function (err, magazine) {
+    if(err) {
+      res.status(400).send("Error getting magazine");
+    } else {
+      res.send(magazine);
+    }
+  })
+});
 
 app.listen(port, () => {
     console.log(`ASKU Image Service listening at http://localhost:${port}`)
