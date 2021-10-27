@@ -7,6 +7,8 @@ COPY ["package.json", "package-lock.json*", "./"]
 
 RUN npm install --development
 
+RUN mkdir uploads
+
 COPY . .
 
 CMD [ "node", "server.js" ]
