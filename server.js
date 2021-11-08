@@ -31,7 +31,7 @@ app.post('/profile', uploader.single('picture'), function (req, res, next) {
                         if (error) {
                             res.status(400).send("Error saving to the database");
                         } else {
-                            res.send("File uploaded successfully");
+                            res.send(success);
                         }
                     });
             } else {
@@ -39,7 +39,7 @@ app.post('/profile', uploader.single('picture'), function (req, res, next) {
                     if (error) {
                         res.status(400).send("Error saving to the database");
                     } else {
-                        res.send("File uploaded successfully");
+                        res.send(success);
                     }
                 });
             }
