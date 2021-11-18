@@ -21,6 +21,8 @@ app.post(
 
 app.get("/profile", profileController.getProfilePicture);
 
+app.delete("/profile", profileController.deleteProfilePicture);
+
 app.post(
   "/magazine",
   uploader.array("picture", 20),
@@ -28,6 +30,8 @@ app.post(
 );
 
 app.get("/magazine", magazineController.getMagazinePhotos);
+
+app.delete("/magazine", magazineController.deleteMagazinePhoto);
 
 app.listen(port, () => {
   console.log(`ASKU Image Service listening at http://localhost:${port}`);

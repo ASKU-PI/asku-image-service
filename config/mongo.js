@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const MONGO_USERNAME = "root";
 const MONGO_PASSWORD = "admin";
-const MONGO_HOSTNAME = "image-db";
+// const MONGO_HOSTNAME = "image-db";
+const MONGO_HOSTNAME = "localhost";
 const MONGO_PORT = "27017";
 const MONGO_DB = "imagedb";
 

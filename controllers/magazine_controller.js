@@ -55,7 +55,21 @@ const getMagazinePhotos = (req, res) => {
   });
 };
 
+const deleteMagazinePhoto = (req, res, next) => {
+  const photoId = req.query.id;
+
+  Magazine.findOneAndRemove({ _id: photoId }, function (err) {
+    if (err) {
+      console.log(err);
+      res.status(400).send("Error removing file");
+    } else {
+      res.status(200).send("Removed");
+    }
+  });
+};
+
 module.exports = {
   addMagazinePhotos,
   getMagazinePhotos,
+  deleteMagazinePhoto
 };

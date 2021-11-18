@@ -1,3 +1,4 @@
+const { rawListeners } = require("../models/profile");
 const Profile = require("../models/profile");
 
 const createOrUpdateProfilePicture = (req, res, next) => {
@@ -52,7 +53,21 @@ const getProfilePicture = (req, res) => {
   });
 };
 
+const deleteProfilePicture = (req, res, next) => {
+  const userId = req.query.id;
+
+  Profile.findOneAndRemove({ id: userId }, function (err) {
+    if (err) {
+      console.log(err);
+      res.status(400).send("Error removing file");
+    } else {
+      res.status(200).send("Removed");
+    }
+  });
+}
+
 module.exports = {
   createOrUpdateProfilePicture,
   getProfilePicture,
+  deleteProfilePicture
 };
