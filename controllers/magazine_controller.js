@@ -56,20 +56,25 @@ const getMagazinePhotos = (req, res) => {
 };
 
 const deleteMagazinePhoto = (req, res, next) => {
-  const photoId = req.query.id;
+  const magazineId = req.query.id;
+  const photoId = req.query.photoId;
 
-  Magazine.findOneAndRemove({ _id: photoId }, function (err) {
-    if (err) {
-      console.log(err);
-      res.status(400).send("Error removing file");
-    } else {
-      res.status(200).send("Removed");
+  Magazine.findOneAndUpdate(
+    { id: magazineId },
+    { $pull: { photos: { _id: photoId } } },
+    function (err) {
+      if (err) {
+        console.log(err);
+        res.status(400).send("Error removing file");
+      } else {
+        res.status(200).send("Removed");
+      }
     }
-  });
+  );
 };
 
 module.exports = {
   addMagazinePhotos,
   getMagazinePhotos,
-  deleteMagazinePhoto
+  deleteMagazinePhoto,
 };
