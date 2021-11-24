@@ -27,6 +27,8 @@ module.exports = {
 
     // Unicorn
     'unicorn/prefer-module': 'off',
+    'unicorn/filename-case': 'off',
+    'unicorn/prevent-abbreviations': 'off',
     'unicorn/no-fn-reference-in-iterator': 'off',
     'unicorn/no-array-for-each': 'off',
     'unicorn/no-null': 'off',
@@ -36,11 +38,8 @@ module.exports = {
     'unicorn/no-array-callback-reference': 'off',
     'unicorn/consistent-function-scoping': 'off',
     'unicorn/no-useless-undefined': 'off',
-    'unicorn/prevent-abbreviations': [
-      'error',
-      {
-        allowList: { Param: true, Req: true, Res: true },
-      },
-    ],
+
+    // Sonarjs
+    'sonarjs/no-duplicate-string': 'off',
   },
 };

@@ -1,40 +1,32 @@
-const { rawListeners } = require("../models/profile");
-const Profile = require("../models/profile");
+require('../models/profile');
+const Profile = require('../models/profile');
 
-const createOrUpdateProfilePicture = (req, res, next) => {
+const createOrUpdateProfilePicture = (req, res) => {
   const filePath = req.file.path;
   const userId = req.query.id;
 
-  Profile.exists({ id: userId }, function (err, doc) {
+  const callback = (error, success) => {
+    if (error) {
+      console.log(error);
+      res.status(400).send('Error saving to the database');
+    } else {
+      res.send(success);
+    }
+  };
+
+  Profile.exists({ id: userId }, (err, doc) => {
     if (err) {
-      res.status(400).send("Error saving to the database");
+      res.status(400).send('Error saving to the database');
     } else {
       if (doc) {
         Profile.findOneAndUpdate(
           { id: userId },
           { photo: { url: filePath } },
           { new: true },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-              res.status(400).send("Error saving to the database");
-            } else {
-              res.send(success);
-            }
-          }
+          callback,
         );
       } else {
-        Profile.create(
-          { id: userId, photo: { url: filePath } },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-              res.status(400).send("Error saving to the database");
-            } else {
-              res.send(success);
-            }
-          }
-        );
+        Profile.create({ id: userId, photo: { url: filePath } }, callback);
       }
     }
   });
@@ -43,31 +35,31 @@ const createOrUpdateProfilePicture = (req, res, next) => {
 const getProfilePicture = (req, res) => {
   const userId = req.query.id;
 
-  Profile.findOne({ id: userId }, function (err, profile) {
-    if (err) {
+  Profile.findOne({ id: userId }, (error, profile) => {
+    if (error) {
       console.log(error);
-      res.status(400).send("Error getting profile");
+      res.status(400).send('Error getting profile');
     } else {
       res.send(profile);
     }
   });
 };
 
-const deleteProfilePicture = (req, res, next) => {
+const deleteProfilePicture = (req, res) => {
   const userId = req.query.id;
 
-  Profile.findOneAndRemove({ id: userId }, function (err) {
+  Profile.findOneAndRemove({ id: userId }, err => {
     if (err) {
       console.log(err);
-      res.status(400).send("Error removing file");
+      res.status(400).send('Error removing file');
     } else {
-      res.status(200).send("Removed");
+      res.status(200).send('Removed');
     }
   });
-}
+};
 
 module.exports = {
   createOrUpdateProfilePicture,
   getProfilePicture,
-  deleteProfilePicture
+  deleteProfilePicture,
 };

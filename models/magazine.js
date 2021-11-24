@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const Magazine = new Schema({
@@ -6,4 +6,4 @@ const Magazine = new Schema({
   photos: [{ url: String }],
 });
 
-module.exports = mongoose.model("Magazine", Magazine);
+module.exports = mongoose.model('Magazine', Magazine);
