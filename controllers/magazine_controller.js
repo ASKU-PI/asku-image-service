@@ -9,7 +9,9 @@ const addMagazinePhotos = (req, res, next) => {
 
   Magazine.exists({ id: magazineId }, function (error, doc) {
     if (error) {
-      logger.error('Checking if the image exists in database failed: ' + error);
+      logger.log.error(
+        'Checking if the image exists in database failed: ' + error
+      );
       res.status(400).send('Error saving to the database');
     } else {
       if (doc) {
@@ -19,7 +21,7 @@ const addMagazinePhotos = (req, res, next) => {
           { new: true },
           function (error, success) {
             if (error) {
-              logger.error(
+              logger.log.error(
                 'Updating the existing image in database failed: ' + error
               );
               res.status(400).send('Error saving to the database');
@@ -33,7 +35,9 @@ const addMagazinePhotos = (req, res, next) => {
           { id: magazineId, photos: photos },
           function (error, success) {
             if (error) {
-              logger.error('Creating new image in database failed: ' + error);
+              logger.log.error(
+                'Creating new image in database failed: ' + error
+              );
               res.status(400).send('Error saving to the database');
             } else {
               res.send(success);
@@ -50,7 +54,7 @@ const getMagazinePhotos = (req, res) => {
 
   Magazine.findOne({ id: magazineId }, function (err, magazine) {
     if (err) {
-      logger.error('Getting image from database failed: ' + error);
+      logger.log.error('Getting image from database failed: ' + error);
       res.status(400).send('Error getting magazine');
     } else {
       res.send(magazine);
@@ -67,7 +71,7 @@ const deleteMagazinePhoto = (req, res, next) => {
     { $pull: { photos: { _id: photoId } } },
     function (err) {
       if (err) {
-        logger.error('Removing image from database failed: ' + error);
+        logger.log.error('Removing image from database failed: ' + error);
         res.status(400).send('Error removing file');
       } else {
         res.status(200).send('Removed');

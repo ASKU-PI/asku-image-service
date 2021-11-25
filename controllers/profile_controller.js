@@ -8,7 +8,9 @@ const createOrUpdateProfilePicture = (req, res, next) => {
 
   Profile.exists({ id: userId }, function (error, doc) {
     if (error) {
-      logger.error('Checking if the image exists in database failed: ' + error);
+      logger.log.error(
+        'Checking if the image exists in database failed: ' + error
+      );
       res.status(400).send('Error saving to the database');
     } else {
       if (doc) {
@@ -18,7 +20,7 @@ const createOrUpdateProfilePicture = (req, res, next) => {
           { new: true },
           function (error, success) {
             if (error) {
-              logger.error(
+              logger.log.error(
                 'Updating the existing image in database failed: ' + error
               );
               res.status(400).send('Error saving to the database');
@@ -32,7 +34,9 @@ const createOrUpdateProfilePicture = (req, res, next) => {
           { id: userId, photo: { url: filePath } },
           function (error, success) {
             if (error) {
-              logger.error('Creating new image in database failed: ' + error);
+              logger.log.error(
+                'Creating new image in database failed: ' + error
+              );
               res.status(400).send('Error saving to the database');
             } else {
               res.send(success);
@@ -49,7 +53,7 @@ const getProfilePicture = (req, res) => {
 
   Profile.findOne({ id: userId }, function (error, profile) {
     if (error) {
-      logger.error('Getting image from database failed: ' + error);
+      logger.log.error('Getting image from database failed: ' + error);
       res.status(400).send('Error getting profile');
     } else {
       res.send(profile);
@@ -62,7 +66,7 @@ const deleteProfilePicture = (req, res, next) => {
 
   Profile.findOneAndRemove({ id: userId }, function (error) {
     if (error) {
-      logger.error('Removing image from database failed: ' + error);
+      logger.log.error('Removing image from database failed: ' + error);
       res.status(400).send('Error removing file');
     } else {
       res.status(200).send('Removed');
