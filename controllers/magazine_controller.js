@@ -1,5 +1,5 @@
 const Magazine = require('../models/magazine');
-const logger = require('./utils/logger');
+const logger = require('../utils/logger');
 
 const addMagazinePhotos = (req, res, next) => {
   const magazineId = req.query.id;

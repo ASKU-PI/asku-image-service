@@ -1,6 +1,6 @@
 const { rawListeners } = require('../models/profile');
 const Profile = require('../models/profile');
-const logger = require('./utils/logger');
+const logger = require('../utils/logger');
 
 const createOrUpdateProfilePicture = (req, res, next) => {
   const filePath = req.file.path;
