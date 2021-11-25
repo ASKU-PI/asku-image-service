@@ -37,5 +37,3 @@ app.delete('/magazine', magazineController.deleteMagazinePhoto);
 app.listen(port, () => {
   logger.info(`ASKU Image Service listening at http://localhost:${port}`);
 });
-
-export default logger;
