@@ -1,6 +1,7 @@
 const express = require('express');
 const eurekaClient = require('./config/eureka');
 const uploader = require('./utils/uploader');
+const logger = require('./utils/logger');
 require('./config/mongo');
 
 const app = express();
@@ -34,5 +35,5 @@ app.get('/magazine', magazineController.getMagazinePhotos);
 app.delete('/magazine', magazineController.deleteMagazinePhoto);
 
 app.listen(port, () => {
-  console.log(`ASKU Image Service listening at http://localhost:${port}`);
+  logger.log.info(`ASKU Image Service listening at http://localhost:${port}`);
 });
