@@ -1,15 +1,18 @@
-const Magazine = require("../models/magazine");
+const Magazine = require('../models/magazine');
+const logger = require('../utils/logger');
 
 const addMagazinePhotos = (req, res, next) => {
   const magazineId = req.query.id;
-  const photos = req.files.map((file) => {
+  const photos = req.files.map(file => {
     return { url: file.path };
   });
 
-  Magazine.exists({ id: magazineId }, function (err, doc) {
-    if (err) {
-      console.log(err);
-      res.status(400).send("Error saving to the database");
+  Magazine.exists({ id: magazineId }, function (error, doc) {
+    if (error) {
+      logger.log.error(
+        'Checking if the image exists in database failed: ' + error
+      );
+      res.status(400).send('Error saving to the database');
     } else {
       if (doc) {
         Magazine.findOneAndUpdate(
@@ -18,8 +21,10 @@ const addMagazinePhotos = (req, res, next) => {
           { new: true },
           function (error, success) {
             if (error) {
-              console.log(err);
-              res.status(400).send("Error saving to the database");
+              logger.log.error(
+                'Updating the existing image in database failed: ' + error
+              );
+              res.status(400).send('Error saving to the database');
             } else {
               res.send(success);
             }
@@ -30,8 +35,10 @@ const addMagazinePhotos = (req, res, next) => {
           { id: magazineId, photos: photos },
           function (error, success) {
             if (error) {
-              console.log(err);
-              res.status(400).send("Error saving to the database");
+              logger.log.error(
+                'Creating new image in database failed: ' + error
+              );
+              res.status(400).send('Error saving to the database');
             } else {
               res.send(success);
             }
@@ -47,8 +54,8 @@ const getMagazinePhotos = (req, res) => {
 
   Magazine.findOne({ id: magazineId }, function (err, magazine) {
     if (err) {
-      console.log(err);
-      res.status(400).send("Error getting magazine");
+      logger.log.error('Getting image from database failed: ' + error);
+      res.status(400).send('Error getting magazine');
     } else {
       res.send(magazine);
     }
@@ -64,10 +71,10 @@ const deleteMagazinePhoto = (req, res, next) => {
     { $pull: { photos: { _id: photoId } } },
     function (err) {
       if (err) {
-        console.log(err);
-        res.status(400).send("Error removing file");
+        logger.log.error('Removing image from database failed: ' + error);
+        res.status(400).send('Error removing file');
       } else {
-        res.status(200).send("Removed");
+        res.status(200).send('Removed');
       }
     }
   );
