@@ -17,7 +17,7 @@ app.use('/uploads', express.static('uploads'));
 app.post(
   '/profile',
   uploader.single('picture'),
-  profileController.createOrUpdateProfilePicture
+  profileController.createOrUpdateProfilePicture,
 );
 
 app.get('/profile', profileController.getProfilePicture);
@@ -27,7 +27,7 @@ app.delete('/profile', profileController.deleteProfilePicture);
 app.post(
   '/magazine',
   uploader.array('picture', 20),
-  magazineController.addMagazinePhotos
+  magazineController.addMagazinePhotos,
 );
 
 app.get('/magazine', magazineController.getMagazinePhotos);

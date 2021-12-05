@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const Profile = new Schema({
@@ -6,4 +6,4 @@ const Profile = new Schema({
   photo: { url: String },
 });
 
-module.exports = mongoose.model("Profile", Profile);
+module.exports = mongoose.model('Profile', Profile);

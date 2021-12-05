@@ -1,15 +1,16 @@
-const { rawListeners } = require('../models/profile');
+require('../models/profile');
 const Profile = require('../models/profile');
+require('../models/profile');
 const logger = require('../utils/logger');
 
-const createOrUpdateProfilePicture = (req, res, next) => {
+const createOrUpdateProfilePicture = (req, res) => {
   const filePath = req.file.path;
   const userId = req.query.id;
 
-  Profile.exists({ id: userId }, function (error, doc) {
+  Profile.exists({ id: userId }, (error, doc) => {
     if (error) {
       logger.log.error(
-        'Checking if the image exists in database failed: ' + error
+        'Checking if the image exists in database failed: ' + error,
       );
       res.status(400).send('Error saving to the database');
     } else {
@@ -18,30 +19,30 @@ const createOrUpdateProfilePicture = (req, res, next) => {
           { id: userId },
           { photo: { url: filePath } },
           { new: true },
-          function (error, success) {
+          (error, success) => {
             if (error) {
               logger.log.error(
-                'Updating the existing image in database failed: ' + error
+                'Updating the existing image in database failed: ' + error,
               );
               res.status(400).send('Error saving to the database');
             } else {
               res.send(success);
             }
-          }
+          },
         );
       } else {
         Profile.create(
           { id: userId, photo: { url: filePath } },
-          function (error, success) {
+          (error, success) => {
             if (error) {
               logger.log.error(
-                'Creating new image in database failed: ' + error
+                'Creating new image in database failed: ' + error,
               );
               res.status(400).send('Error saving to the database');
             } else {
               res.send(success);
             }
-          }
+          },
         );
       }
     }
@@ -51,7 +52,7 @@ const createOrUpdateProfilePicture = (req, res, next) => {
 const getProfilePicture = (req, res) => {
   const userId = req.query.id;
 
-  Profile.findOne({ id: userId }, function (error, profile) {
+  Profile.findOne({ id: userId }, (error, profile) => {
     if (error) {
       logger.log.error('Getting image from database failed: ' + error);
       res.status(400).send('Error getting profile');
@@ -61,10 +62,10 @@ const getProfilePicture = (req, res) => {
   });
 };
 
-const deleteProfilePicture = (req, res, next) => {
+const deleteProfilePicture = (req, res) => {
   const userId = req.query.id;
 
-  Profile.findOneAndRemove({ id: userId }, function (error) {
+  Profile.findOneAndRemove({ id: userId }, error => {
     if (error) {
       logger.log.error('Removing image from database failed: ' + error);
       res.status(400).send('Error removing file');
